@@ -13,7 +13,7 @@ A class for each of them is developed to explore their characterisitcs. The clas
 
 ## Target Variable Processing
 
-As a first step, missing and outlier values of targt variable are identified . Subsequently, basic characteristics of time series (seasonality, trend, stationary etc.) are observed from plots and statistics test. Then, correlation with previous values and time parameters are evaluated. Based on the outcomes, dataframes of relevant features are created which are used in further modeling. 
+As a first step, missing and outlier values of targt variable are identified . Subsequently, basic characteristics of time series (seasonality, trend, stationary etc.) are observed from plots and statistics test. Then, correlation of current values with previous values and time parameters are evaluated. Based on the outcomes, dataframes of relevant features are created which are used in time sereis modeling. 
 
 ### Missing, unique, and outliers values
     - Number of missing and outlier values are examined and imputed before any further processing. Number of unique values indicates whether target variable is a categorical or continous value. 
