@@ -54,15 +54,23 @@ class TimeindexProcessing:
         missing_index_list = list(missing_index)
 
         if(len(missing_index_list)!= 0):
+            original_dtypes = rows_added_df.dtypes
             print('There are', len(missing_index), 'missing index in the time series')
+            #Creating dataframe of missing index and columns of original dataframe
             missing_df = pd.DataFrame(columns = rows_added_df.columns, 
-                                index = missing_index_list)
+                                index = missing_index_list) 
+            #Adding the the missing index into df
+            rows_added_df = pd.concat([rows_added_df, missing_df], axis = 'index') 
+            # data types of row_added_df change to object types and therefore, converting them to original data types
+            for column in rows_added_df.columns:
+                column_data_type = original_dtypes.loc[column]
+                # print(column, column_data_type)
+                rows_added_df[column] = rows_added_df[column].astype(column_data_type)
+            rows_added_df.sort_index(inplace = True)
         else:
             missing_df = pd.DataFrame()
             print('All time index present')
-        rows_added_df = pd.concat([rows_added_df, missing_df], axis = 'index') #Adding the the missing index into df
-        rows_added_df.sort_index(inplace = True)
-
+    
         return sorted(missing_index_list), rows_added_df
 
     def duplicate_timeindex(self, df):
