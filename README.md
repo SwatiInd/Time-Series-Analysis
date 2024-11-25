@@ -12,9 +12,11 @@ A class for each of them is developed to explore their characterisitcs. The clas
 In modeling/forecasting, a continuous time series is required. Any missing or duplicated index can influence their results. Therefore, the following methods were developed to obtain cleaned time series index:
 
 1. Convert column to time index
-    The first step is to convert the column which represent date and time of time sereis into time index. 
+    The first step is to convert the column which represent date and time of time sereis into time index.
+```index_processing = TimeindexProcessing()
+indexed_df = index_processing.convert_column_to_timeindex(df, column_name= 'Datetime')```
 
-2. Duplicate time index
+3. Duplicate time index
     Some  pandas method don't work on duplicate index. Therefore, they need to be checked and further action like dropping, averaging etc. needs to be decided based on data. In the developed method, the first index of duplicates is kept in time series while others are dropped.
 
 4. Missing time index
