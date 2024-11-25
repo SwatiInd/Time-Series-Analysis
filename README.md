@@ -51,7 +51,7 @@ missing_index_list, rows_added_df = index_processing.missing_timeindex(duplicate
 rows_added_df.loc[missing_index_list]
 ```
 
-## 2. Input Variable Processing
+## 2. Target Variable Processing
 
 As a first step, missing and outlier values of targt variable are identified . Subsequently, basic characteristics of time series (seasonality, trend, stationary etc.) are observed from plots and statistics test. Then, correlation of current values with previous values and time parameters are evaluated. Based on the outcomes, dataframes of relevant features are created which are used in time sereis modeling. 
 
@@ -64,16 +64,7 @@ Daily, weekly, and monthly data are plotted to identify seasonality. In order to
 ### 2.3 Stationarity
 Augumented-Dickey Fuller Test is performed to confirm whether time series is stationary or non-stationary.
 
-### 2.4 Feature engineering
-This step is useful for creating features for supervised machine learning models (e.g.: linear regression, radnom forest, decision trees). In the developed class, methods are developed for following cases:
-
-(a) *Autocorrelation*: Correlation of the current value to previous lags is determiend. 
-    
-(b) *Time parameters*:  Influence of hour of the day, day of the month, week day, and month of the year on output parameter is also understood. 
-
-Parameters which have strong coorelation with the output parameter can be created as input features.
-
-Methods of section 2 are in continuation to the section 1 as shown below:
+Methods of section 2.1 to 2.3 are in continuation to the section 1 as shown below:
 ```python
 from TargetVariableProcessing import TargetVariableProcessing
 
@@ -101,15 +92,15 @@ plot = tvp.plotting_timeseries(output_series,
 
 # Identifying whethter output series is stationary or not
 adf_result = tvp.stationarity()
+```
 
-# Measuring correlation of defined time parameters to output series
-time_parameters = ['hour', 'day', 'month', 'weekday']
-time_correlation = tvp.correlation_to_timeperiod(time_parameters)
 
-# Creating features of strongly correlated time parameters 
-time_features_to_add = ['hour', 'working day']
-time_features_df = tvp.create_time_features(time_features_to_add)
+### 2.4 Feature engineering
+This step is useful for creating features for supervised machine learning models (e.g.: linear regression, radnom forest, decision trees). In the developed class, methods are developed for following cases:
 
+(a) *Autocorrelation*: Correlation of the current value to previous lags is determiend. A dataframe of lags which have strong correlation to the current values is created.
+
+```python
 # Evaluating correlation of the current value to defined previous lags
 previous_lags = 24*7
 autocorrelation = tvp.autocorrelation(lag_number = previous_lags)
@@ -118,5 +109,19 @@ autocorrelation = tvp.autocorrelation(lag_number = previous_lags)
 previous_strong_lags = [1, 2, 24]
 added_lags_df = tvp.create_lag_features(previous_strong_lags)
 ```
+    
+(b) *Time parameters*:  Influence of hour of the day, day of the month, week day, and month of the year on output parameter can be evaluated from the developed method. Next, parameters which have strong coorelation with the output parameter can be created in a separate dataframe.
+
+```python
+# Measuring correlation of defined time parameters to output series
+time_parameters = ['hour', 'day', 'month', 'weekday']
+time_correlation = tvp.correlation_to_timeperiod(time_parameters)
+
+# Creating features of strongly correlated time parameters 
+time_features_to_add = ['hour', 'working day']
+time_features_df = tvp.create_time_features(time_features_to_add)
+```
+
+
    
 
