@@ -129,6 +129,7 @@ In a multivariate time series, there is one or more input variables. Before any 
 The following steps can be performed after completion of section 1.
 
 ```python
+from InputVariablesProcessing import InputVariablesProcessing
 cleaned_index_df = rows_added_df.copy()
 
 # Define the output parameter
