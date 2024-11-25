@@ -51,7 +51,7 @@ missing_index_list, rows_added_df = index_processing.missing_timeindex(duplicate
 rows_added_df.loc[missing_index_list]
 ```
 
-## 2. Input Variable Processing
+## 2. Target Variable Processing
 
 As a first step, missing and outlier values of targt variable are identified . Subsequently, basic characteristics of time series (seasonality, trend, stationary etc.) are observed from plots and statistics test. Then, correlation of current values with previous values and time parameters are evaluated. Based on the outcomes, dataframes of relevant features are created which are used in time sereis modeling. 
 
