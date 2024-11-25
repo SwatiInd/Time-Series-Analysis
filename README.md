@@ -13,8 +13,8 @@ In modeling/forecasting, a continuous time series is required. Any missing or du
 
 1. Convert column to time index
     The first step is to convert the column which represent date and time of time sereis into time index.
-```index_processing = TimeindexProcessing()
-indexed_df = index_processing.convert_column_to_timeindex(df, column_name= 'Datetime')```
+`index_processing = TimeindexProcessing()`
+`indexed_df = index_processing.convert_column_to_timeindex(df, column_name= 'Datetime')`
 
 3. Duplicate time index
     Some  pandas method don't work on duplicate index. Therefore, they need to be checked and further action like dropping, averaging etc. needs to be decided based on data. In the developed method, the first index of duplicates is kept in time series while others are dropped.
