@@ -9,7 +9,7 @@ A class for each of them is developed to explore their characterisitcs. The clas
 
 ## 1. Time Index Processing 
 
-In modeling/forecasting, a continuous time series is required. Any missing or duplicated index can influence their results. Therefore, the following methods were developed to obtain cleaned time series index:
+In modeling/forecasting, a continuous time series is required. Any missing or duplicated index can influence their results. Therefore, the following methods were developed in the class [TimeIndexProcessing.py](https://github.com/SwatiInd/Time-Series-Analysis/blob/main/TimeindexProcessing.py) to obtain cleaned time series index:
 
 ### 1.1 Convert column to time index
    
@@ -53,7 +53,7 @@ rows_added_df.loc[missing_index_list]
 
 ## 2. Target Variable Processing
 
-As a first step, missing and outlier values of targt variable are identified . Subsequently, basic characteristics of time series (seasonality, trend, stationary etc.) are observed from plots and statistics test. Then, correlation of current values with previous values and time parameters are evaluated. Based on the outcomes, dataframes of relevant features are created which are used in time sereis modeling. 
+In the developed class of target variable [TargetVariableProcessing.py](https://github.com/SwatiInd/Time-Series-Analysis/blob/main/TargetVariableProcessing.py), the first steps identifies missing and outlier values of targt variable . Subsequently, basic characteristics of time series (seasonality, trend, stationary etc.) are observed from plots and statistics test. Then, correlation of current values with previous values and time parameters are evaluated. Based on the outcomes, dataframes of relevant features are created which are used in time sereis modeling. 
 
 ### 2.1 Missing, unique, and outliers values
 Number of missing and outlier values are examined and imputed before any further processing. Number of unique values indicates whether target variable is a categorical or continous value.
@@ -122,6 +122,52 @@ time_features_to_add = ['hour', 'working day']
 time_features_df = tvp.create_time_features(time_features_to_add)
 ```
 
+## 3. Input Variables Processing
 
-   
+In a multivariate time series, there is one or more input variables. Before any analysis or modeling, these features must be cleaned (e.g.: no missing values). The class InputVariablesProceesing [InputVariableProcessing.py](https://github.com/SwatiInd/Time-Series-Analysis/blob/main/InputVariablesProcessing.py), is developed which identifies missing and unique values of each columns.  On the other hand based on unique values, types of columns (categorical or continuous) is decided. Based on number of missing columns, a column is either dropped or imputed. If a column is to be imputed, then its imputing methods (e.g. linear interploation, back or forward filling, mean, median etc) is determined based on types of column.
 
+The following steps can be performed after completion of section 1.
+
+```python
+cleaned_index_df = rows_added_df.copy()
+
+# Define the output parameter
+output_parameter = 'battery_output'
+# Extract the output series from cleaned dataframe
+output_series = cleaned_index_df[output_parameter]
+
+# Input variables dataframe
+input_features_df = cleaned_index_df.copy()
+input_features_df.drop(output_parameter, axis = 1, inplace = True)
+
+# Defining list of columns to drop and a dictionary of columns (key - method, value - list of columns) to impute 
+# which will be appended based on outcome of each section
+columns_to_drop = []
+columns_to_impute = {}
+
+# Missing values columns
+ivp = InputVariablesProcessing(input_features_df)
+missing_values_columns = ivp.missing_rows_count()
+
+# Columns with one constant value
+constant_values_columns = ivp.constant_values()
+columns_to_drop = columns_to_drop + constant_values_columns.index.tolist()
+
+# Small unique values columns
+small_uniquevalue_columns = ivp.small_unique_values()
+categorical_numerical_columns = small_uniquevalue_columns.index.tolist()
+
+# Defining imputing methods
+columns_to_impute['ffill'] = categorical_numerical_columns 
+columns_to_impute['linear'] = []
+
+# Imputing dataframe
+imputed_df = ivp.data_imputation(input_features_df, columns_to_impute)
+
+# Rows to drop
+rows_missing_values = imputed_df.isna().sum(axis = 1)
+rows_to_drop = rows_missing_values[rows_missing_values >0].index.tolist()
+
+cleaned_input_df = ivp.data_cleaning(imputed_df, columns_to_drop = columns_to_drop, rows_to_drop = rows_to_drop)
+```
+Thus obtained, cleaned dataframe is used for time series modeling.
