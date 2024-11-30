@@ -2,9 +2,9 @@ import pandas as pd
 
 class TimeindexProcessing:
     '''A class for investigation of timeseries index'''
-
+    
     def convert_column_to_timeindex(self, df, column_name = None):
-        '''Converts a column to time index
+        '''Converts and sorts a column to time index 
         
         Parameters
         ----------
@@ -22,7 +22,7 @@ class TimeindexProcessing:
         if(column_name is not None):
             time_index_df.set_index(column_name, inplace = True)
             time_index_df.index = pd.to_datetime(time_index_df.index)
-
+        time_index_df.sort_index(inplace = True)
         return time_index_df
 
 
